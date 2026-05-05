@@ -1,14 +1,11 @@
-from django.http import HttpResponse
-from django.template import loader
+from django.shortcuts import render, get_object_or_404
+from .models import Pokemon
 
 def index(request):
-    pokemons = ['charmander', 'pikachu', 'squirtle']
-    template = loader.get_template('index.html')
-    return HttpResponse(template.render({'pokemons': pokemons}, request))
+    pokemons = Pokemon.objects.all()
+    return render(request, 'index.html', {'pokemons': pokemons})
+
 
 def pokemon(request, pokemon):
-    template = loader.get_template('display_pokemon.html')
-    context = {
-        'pokemon': pokemon
-    }
-    return HttpResponse(template.render(context, request))
+    pokemon_obj = get_object_or_404(Pokemon, name=pokemon)
+    return render(request, 'display_pokemon.html', {'pokemon': pokemon_obj})
