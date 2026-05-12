@@ -1,49 +1,102 @@
-{% extends "base.html" %} 
-{% block title%}Págin Inicial{% endblock title %}
+{% extends "base.html" %}
 
-{% block content%}
-<h3>Pokemons</h3>
-    <div class="row">
-        {% for pokemon in pokemons %}
+{% block title %}
+Página Inicial
+{% endblock title %}
+
+{% block content %}
+
+<!-- Botón superior (agregar Pokémon) -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h3>Pokémon</h3>
+
+    <a href="{% url 'pokedex:add_pokemon' %}" class="btn btn-success">
+        ➕ Agregar Pokémon
+    </a>
+
+</div>
+
+<!-- Lista de Pokémon -->
+<div class="row">
+
+    {% for pokemon in pokemons %}
+
     <div class="col-md-4 mb-4">
-        <br>
 
         <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
-        <img src="{{ pokemon.picture.url }}"
-            class="card-img-top img-fluid"
-            alt="...">
+
+            <!-- Imagen del Pokémon -->
+            {% if pokemon.picture %}
+                <img src="{{ pokemon.picture.url }}"
+                     class="card-img-top img-fluid"
+                     alt="{{ pokemon.name }}">
+            {% else %}
+                <img src="/static/default.png"
+                     class="card-img-top img-fluid"
+                     alt="Sin imagen">
+            {% endif %}
+
             <div class="card-body">
-                <h5 class="card-title">{{ pokemon.name }}</h5>
-            <p class="card-text">Altura {{ pokemon.height}}  </p>
-            <a href="/pokemon/{{ pokemon.name }}/" class="btn btn-primary">
-                <i class="fa-solid fa-eye"></i>
-            </a>
+
+                <!-- Nombre -->
+                <h5 class="card-title">
+                    {{ pokemon.name }}
+                </h5>
+
+                <!-- Altura -->
+                <p class="card-text">
+                    Altura: {{ pokemon.height }}
+                </p>
+
+                <!-- Botones de acción -->
+                <div class="d-flex gap-2">
+
+                    <!-- Ver detalles -->
+                    <a href="{% url 'pokedex:pokemon' pokemon.id %}" class="btn btn-primary">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+
+                    <!-- Editar Pokémon -->
+                    <a href="{% url 'pokedex:edit_pokemon' pokemon.id %}" class="btn btn-warning">
+                        <i class="fa-solid fa-pencil"></i>
+                    </a>
+
+                    <!-- Borrar Pokémon (SEGURIDAD: POST) -->
+                    <form action="{% url 'pokedex:delete_pokemon' pokemon.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+
+                </div>
+
             </div>
+
         </div>
 
-
     </div>
 
-        {% endfor %}
-    </div>
+    {% endfor %}
 
-<h3>Entrenadores</h3>
-    <ul class="list-group mt-4">
-        {% for trainer in trainers %}
-            <li class="list-group-item">
-                <a href="/trainer/{{ trainer.id }}/">
-                    {{ trainer.first_name }} {{ trainer.last_name }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+</div>
 
-    <div class="text-end mb-4 mt-3">
+<!-- Entrenadores -->
+<h3 class="mt-5">Entrenadores</h3>
 
-        <a href="/add-pokemon/" class="btn btn-success">
-            ➕ Agregar Pokémon
-        </a>
+<ul class="list-group mt-3">
 
-    </div>
+    {% for trainer in trainers %}
+
+        <li class="list-group-item">
+            <a href="{% url 'pokedex:trainer' trainer.id %}">
+                {{ trainer.first_name }} {{ trainer.last_name }}
+            </a>
+        </li>
+
+    {% endfor %}
+
+</ul>
 
 {% endblock content %}

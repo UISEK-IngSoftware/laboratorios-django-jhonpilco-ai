@@ -6,26 +6,29 @@
 
 {% block content %}
 
+<!-- Contenedor principal -->
 <div class="container mt-5">
 
     <div class="card shadow-lg border-0 rounded-4">
 
         <div class="row g-0">
 
-            <!-- Imagen -->
+            <!-- Imagen del Pokémon -->
             <div class="col-md-5 text-center bg-light p-4">
 
                 <img src="{{ pokemon.picture.url }}"
                      class="img-fluid"
-                     style="max-height: 350px;">
+                     style="max-height: 350px;"
+                     alt="{{ pokemon.name }}">
 
             </div>
 
-            <!-- Información -->
+            <!-- Información del Pokémon -->
             <div class="col-md-7">
 
                 <div class="card-body p-5">
 
+                    <!-- Nombre -->
                     <h1 class="fw-bold text-primary">
                         {{ pokemon.name }}
                     </h1>
@@ -43,53 +46,47 @@
 
                     <ul class="list-group list-group-flush">
 
+                        <!-- Peso -->
                         <li class="list-group-item">
                             ⚖️ <strong>Peso:</strong>
                             {{ pokemon.weight }} Kg
                         </li>
 
+                        <!-- Altura -->
                         <li class="list-group-item">
                             📏 <strong>Altura:</strong>
                             {{ pokemon.height }} cm
                         </li>
 
+                        <!-- Entrenador (mejorado) -->
                         <li class="list-group-item">
                             👨‍🏫 <strong>Entrenador:</strong>
-                            {{ pokemon.trainer }}
+                            {{ pokemon.trainer.first_name }} {{ pokemon.trainer.last_name }}
                         </li>
 
+                        <!-- Tipo -->
                         <li class="list-group-item">
                             🔥 <strong>Tipo:</strong>
 
                             {% if pokemon.type == 'A' %}
 
-                                <span class="badge bg-primary">
-                                    Agua
-                                </span>
+                                <span class="badge bg-primary">Agua</span>
 
                             {% elif pokemon.type == 'F' %}
 
-                                <span class="badge bg-danger">
-                                    Fuego
-                                </span>
+                                <span class="badge bg-danger">Fuego</span>
 
                             {% elif pokemon.type == 'P' %}
 
-                                <span class="badge bg-success">
-                                    Planta
-                                </span>
+                                <span class="badge bg-success">Planta</span>
 
                             {% elif pokemon.type == 'E' %}
 
-                                <span class="badge bg-warning text-dark">
-                                    Eléctrico
-                                </span>
+                                <span class="badge bg-warning text-dark">Eléctrico</span>
 
                             {% elif pokemon.type == 'S' %}
 
-                                <span class="badge bg-info text-dark">
-                                    Psíquico
-                                </span>
+                                <span class="badge bg-info text-dark">Psíquico</span>
 
                             {% else %}
 
@@ -103,6 +100,7 @@
 
                     </ul>
 
+                    <!-- Botón volver -->
                     <div class="mt-4">
 
                         <a href="/" class="btn btn-primary">

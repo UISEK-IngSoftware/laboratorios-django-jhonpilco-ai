@@ -17,16 +17,14 @@ def index(request):
     }, request))
 
 
-def pokemon(request, pokemon):
-    pokemon_obj = Pokemon.objects.get(name=pokemon)
+def pokemon(request, pokemon_id):
+    pokemon_obj = Pokemon.objects.get(id=pokemon_id)
 
     template = loader.get_template('display_pokemon.html')
 
-    context = {
+    return HttpResponse(template.render({
         'pokemon': pokemon_obj
-    }
-
-    return HttpResponse(template.render(context, request))
+    }, request))
 
 
 def trainer(request, trainer_id):
@@ -34,16 +32,14 @@ def trainer(request, trainer_id):
 
     template = loader.get_template('display_trainer.html')
 
-    context = {
+    return HttpResponse(template.render({
         'trainer': trainer_obj
-    }
+    }, request))
 
-    return HttpResponse(template.render(context, request))
 
 def add_pokemon(request):
 
     if request.method == 'POST':
-
         form = PokemonForm(request.POST, request.FILES)
 
         if form.is_valid():
@@ -56,3 +52,32 @@ def add_pokemon(request):
     return render(request, 'add_pokemon.html', {
         'form': form
     })
+
+
+def edit_pokemon(request, pokemon_id):
+
+    pokemon_obj = Pokemon.objects.get(id=pokemon_id)
+
+    if request.method == 'POST':
+        form = PokemonForm(request.POST, request.FILES, instance=pokemon_obj)
+
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+
+    else:
+        form = PokemonForm(instance=pokemon_obj)
+
+    return render(request, 'add_pokemon.html', {
+        'form': form
+    })
+
+from django.shortcuts import get_object_or_404, redirect
+
+def delete_pokemon(request, pokemon_id):
+    try:
+        pokemon_obj = Pokemon.objects.get(id=pokemon_id)
+        pokemon_obj.delete()
+    except Pokemon.DoesNotExist:
+        pass  # o mostrar mensaje
+    return redirect('pokedex:index')
