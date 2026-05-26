@@ -1,7 +1,10 @@
 from django.http import HttpResponse
 from django.template import loader
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.decorators import login_required
+
 from .models import Pokemon, Trainer
-from django.shortcuts import render, redirect
 from .forms import PokemonForm
 
 
@@ -18,7 +21,7 @@ def index(request):
 
 
 def pokemon(request, pokemon_id):
-    pokemon_obj = Pokemon.objects.get(id=pokemon_id)
+    pokemon_obj = get_object_or_404(Pokemon, id=pokemon_id)
 
     template = loader.get_template('display_pokemon.html')
 
@@ -28,7 +31,7 @@ def pokemon(request, pokemon_id):
 
 
 def trainer(request, trainer_id):
-    trainer_obj = Trainer.objects.get(id=trainer_id)
+    trainer_obj = get_object_or_404(Trainer, id=trainer_id)
 
     template = loader.get_template('display_trainer.html')
 
@@ -37,6 +40,7 @@ def trainer(request, trainer_id):
     }, request))
 
 
+@login_required
 def add_pokemon(request):
 
     if request.method == 'POST':
@@ -44,6 +48,7 @@ def add_pokemon(request):
 
         if form.is_valid():
             form.save()
+
             return redirect('/')
 
     else:
@@ -54,30 +59,48 @@ def add_pokemon(request):
     })
 
 
+@login_required
 def edit_pokemon(request, pokemon_id):
 
-    pokemon_obj = Pokemon.objects.get(id=pokemon_id)
+    pokemon_obj = get_object_or_404(Pokemon, id=pokemon_id)
 
     if request.method == 'POST':
-        form = PokemonForm(request.POST, request.FILES, instance=pokemon_obj)
+
+        form = PokemonForm(
+            request.POST,
+            request.FILES,
+            instance=pokemon_obj
+        )
 
         if form.is_valid():
             form.save()
+
             return redirect('/')
 
     else:
-        form = PokemonForm(instance=pokemon_obj)
+
+        form = PokemonForm(
+            instance=pokemon_obj
+        )
 
     return render(request, 'add_pokemon.html', {
         'form': form
     })
 
-from django.shortcuts import get_object_or_404, redirect
 
+@login_required
 def delete_pokemon(request, pokemon_id):
-    try:
-        pokemon_obj = Pokemon.objects.get(id=pokemon_id)
-        pokemon_obj.delete()
-    except Pokemon.DoesNotExist:
-        pass  # o mostrar mensaje
+
+    pokemon_obj = get_object_or_404(
+        Pokemon,
+        id=pokemon_id
+    )
+
+    pokemon_obj.delete()
+
     return redirect('pokedex:index')
+
+
+class CustomLoginView(LoginView):
+
+    template_name = "login_form.html"

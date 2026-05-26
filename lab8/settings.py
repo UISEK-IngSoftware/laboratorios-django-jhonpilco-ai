@@ -125,10 +125,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_ROOT = BASE_DIR  / 'staticfiles'
 
-STATICFILES = [
-    BASE_DIR/ 'static'
-    ]
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+LOGIN_REDIRECT_URL= "pokedex:index"
+LOGOUT_REDIRECT_URL = "pokedex:index"
+LOGIN_URL = "pokedex:login"
