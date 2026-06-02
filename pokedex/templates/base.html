@@ -36,13 +36,16 @@
 
             {% if user.is_authenticated %}
 
-                <a href="{% url 'pokedex:logout' %}"
-                   class="btn btn-danger">
+                <form action="{% url 'pokedex:logout' %}" method="post">
 
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    Cerrar sesión
+                    {% csrf_token %}
 
-                </a>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Cerrar sesión
+                    </button>
+
+                </form>
 
             {% else %}
 
