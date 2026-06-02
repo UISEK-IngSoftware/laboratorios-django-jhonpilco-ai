@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+Añadir Entrenador
+{% endblock title %}
+
+{% block content %}
+
+<h2>Añadir Entrenador</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success">
+        Guardar
+    </button>
+
+    <a href="{% url 'pokedex:index' %}" class="btn btn-secondary">
+        Cancelar
+    </a>
+
+</form>
+
+{% endblock content %}

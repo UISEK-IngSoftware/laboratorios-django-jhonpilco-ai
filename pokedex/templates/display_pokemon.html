@@ -6,14 +6,13 @@
 
 {% block content %}
 
-<!-- Contenedor principal -->
 <div class="container mt-5">
 
     <div class="card shadow-lg border-0 rounded-4">
 
         <div class="row g-0">
 
-            <!-- Imagen del Pokémon -->
+            <!-- Imagen -->
             <div class="col-md-5 text-center bg-light p-4">
 
                 <img src="{{ pokemon.picture.url }}"
@@ -23,12 +22,11 @@
 
             </div>
 
-            <!-- Información del Pokémon -->
+            <!-- Info -->
             <div class="col-md-7">
 
                 <div class="card-body p-5">
 
-                    <!-- Nombre -->
                     <h1 class="fw-bold text-primary">
                         {{ pokemon.name }}
                     </h1>
@@ -40,58 +38,58 @@
 
                     <hr>
 
-                    <h4 class="mb-3">
-                        Características
-                    </h4>
+                    <h4>Características</h4>
 
                     <ul class="list-group list-group-flush">
 
-                        <!-- Peso -->
                         <li class="list-group-item">
-                            ⚖️ <strong>Peso:</strong>
-                            {{ pokemon.weight }} Kg
+                            ⚖️ <strong>Peso:</strong> {{ pokemon.weight }} Kg
                         </li>
 
-                        <!-- Altura -->
                         <li class="list-group-item">
-                            📏 <strong>Altura:</strong>
-                            {{ pokemon.height }} cm
+                            📏 <strong>Altura:</strong> {{ pokemon.height }} cm
                         </li>
 
-                        <!-- Entrenador (mejorado) -->
                         <li class="list-group-item">
-                            👨‍🏫 <strong>Entrenador:</strong>
-                            {{ pokemon.trainer.first_name }} {{ pokemon.trainer.last_name }}
+                            🧢 <strong>Entrenador:</strong>
+
+                            {% if pokemon.trainer %}
+                                {{ pokemon.trainer }}
+                            {% else %}
+                                <span class="text-muted">
+                                    Sin entrenador
+                                </span>
+                            {% endif %}
+
                         </li>
 
-                        <!-- Tipo -->
                         <li class="list-group-item">
-                            🔥 <strong>Tipo:</strong>
+                            🧬 <strong>Tipo:</strong>
 
                             {% if pokemon.type == 'A' %}
-
                                 <span class="badge bg-primary">Agua</span>
 
                             {% elif pokemon.type == 'F' %}
-
                                 <span class="badge bg-danger">Fuego</span>
 
                             {% elif pokemon.type == 'P' %}
-
                                 <span class="badge bg-success">Planta</span>
 
-                            {% elif pokemon.type == 'E' %}
+                            {% elif pokemon.type == 'T' %}
+                                <span class="badge bg-warning text-dark">Tierra</span>
 
+                            {% elif pokemon.type == 'E' %}
                                 <span class="badge bg-warning text-dark">Eléctrico</span>
 
-                            {% elif pokemon.type == 'S' %}
+                            {% elif pokemon.type == 'L' %}
+                                <span class="badge bg-dark">Lagartija</span>
 
+                            {% elif pokemon.type == 'S' %}
                                 <span class="badge bg-info text-dark">Psíquico</span>
 
                             {% else %}
-
                                 <span class="badge bg-secondary">
-                                    {{ pokemon.type }}
+                                    {{ pokemon.get_type_display }}
                                 </span>
 
                             {% endif %}
@@ -100,12 +98,20 @@
 
                     </ul>
 
-                    <!-- Botón volver -->
+                    <!-- BOTÓN VOLVER INTELIGENTE -->
                     <div class="mt-4">
 
-                        <a href="/" class="btn btn-primary">
-                            ⬅ Volver
-                        </a>
+                        {% if request.GET.from_trainer %}
+                            <a href="{% url 'pokedex:trainer' request.GET.from_trainer %}"
+                               class="btn btn-secondary">
+                                Volver
+                            </a>
+                        {% else %}
+                            <a href="{% url 'pokedex:index' %}?view=pokemons"
+                               class="btn btn-secondary">
+                                Volver
+                            </a>
+                        {% endif %}
 
                     </div>
 

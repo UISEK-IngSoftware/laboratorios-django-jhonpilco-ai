@@ -6,6 +6,8 @@ class Trainer(models.Model):
     birth_date = models.DateField()
     level = models.IntegerField(default=1)
     
+    picture = models.ImageField(upload_to="trainer_images")
+    
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -37,3 +39,4 @@ class Pokemon(models.Model):
 
     def __str__(self):
         return self.name
+    

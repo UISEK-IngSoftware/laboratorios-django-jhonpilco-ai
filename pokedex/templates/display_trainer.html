@@ -1,57 +1,155 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{ trainer | capfirst }}
+{{ trainer }}
 {% endblock title %}
 
 {% block content %}
 
 <div class="container mt-5">
 
-    <div class="card shadow-lg border-0 rounded-4">
+    <!-- PERFIL -->
+    <div class="card shadow-lg border-0 rounded-4 mb-4">
 
-        <div class="card-body p-5">
+        <div class="card-body p-4">
 
-            <h1 class="fw-bold text-primary">
-                {{ trainer | capfirst }}
-            </h1>
+            <div class="row align-items-center">
 
-            <p class="text-muted fs-5">
-                Perfil del entrenador Pokémon
-            </p>
+                <div class="col-md-4 text-center">
 
-            <hr>
+                    {% if trainer.picture %}
+                        <img src="{{ trainer.picture.url }}"
+                             class="img-fluid rounded-4 shadow-sm"
+                             alt="{{ trainer }}">
+                    {% else %}
+                        <div class="text-muted">
+                            Sin imagen de entrenador
+                        </div>
+                    {% endif %}
 
-            <h4 class="mb-4">
-                Información
-            </h4>
+                </div>
 
-            <ul class="list-group list-group-flush">
+                <div class="col-md-8">
 
-                <li class="list-group-item">
-                    ⭐ <strong>Nivel:</strong>
+                    <h1 class="fw-bold text-primary">
+                        {{ trainer }}
+                    </h1>
 
-                    <span class="badge bg-warning text-dark">
-                        {{ trainer.level }}
-                    </span>
-                </li>
+                    <p class="text-muted fs-5">
+                        Perfil del entrenador Pokémon
+                    </p>
 
-                <li class="list-group-item">
-                    🎂 <strong>Fecha de nacimiento:</strong>
-                    {{ trainer.birth_date }}
-                </li>
+                    <hr>
 
-            </ul>
+                    <ul class="list-group list-group-flush">
 
-            <div class="mt-4">
+                        <li class="list-group-item">
+                            ⭐ <strong>Nivel:</strong>
+                            <span class="badge bg-warning text-dark">
+                                {{ trainer.level }}
+                            </span>
+                        </li>
 
-                <a href="/" class="btn btn-primary">
-                    ⬅ Volver
-                </a>
+                        <li class="list-group-item">
+                            🎂 <strong>Fecha de nacimiento:</strong>
+                            {{ trainer.birth_date }}
+                        </li>
+
+                    </ul>
+
+                </div>
 
             </div>
 
         </div>
+
+    </div>
+
+    <!-- POKÉMONS -->
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <div class="card-body p-4">
+
+            <h4 class="mb-4 text-primary fw-bold">
+                Pokémon del entrenador
+            </h4>
+
+            <div class="row">
+
+                {% for pokemon in trainer.pokemon_set.all %}
+
+                    <div class="col-md-4 mb-3">
+
+                        <div class="card shadow-sm border-0 h-100">
+
+                            {% if pokemon.picture %}
+                                <img src="{{ pokemon.picture.url }}"
+                                     class="card-img-top"
+                                     style="height: 180px; object-fit: contain;">
+                            {% endif %}
+
+                            <div class="card-body text-center">
+
+                                <h6 class="card-title">
+                                    {{ pokemon.name }}
+                                </h6>
+
+                                <p class="card-text">
+                                    Tipo:
+
+                                    {% if pokemon.type == 'F' %}
+                                        <span class="badge bg-danger">Fuego</span>
+                                    {% elif pokemon.type == 'A' %}
+                                        <span class="badge bg-primary">Agua</span>
+                                    {% elif pokemon.type == 'P' %}
+                                        <span class="badge bg-success">Planta</span>
+                                    {% elif pokemon.type == 'T' %}
+                                        <span class="badge bg-warning text-dark">Tierra</span>
+                                    {% elif pokemon.type == 'E' %}
+                                        <span class="badge bg-warning text-dark">Eléctrico</span>
+                                    {% elif pokemon.type == 'S' %}
+                                        <span class="badge bg-info text-dark">Psíquico</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            {{ pokemon.get_type_display }}
+                                        </span>
+                                    {% endif %}
+
+                                </p>
+
+                                <a href="{% url 'pokedex:pokemon' pokemon.id %}?from_trainer={{ trainer.id }}"
+                                   class="btn btn-primary btn-sm">
+                                   <i class="fa-solid fa-eye"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="col-12">
+                        <div class="alert alert-warning">
+                            Este entrenador no tiene Pokémon registrados.
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- VOLVER -->
+    <div class="mt-4">
+
+        <a href="{% url 'pokedex:index' %}?view=trainers" class="btn btn-secondary">
+            Volver
+        </a>
 
     </div>
 
