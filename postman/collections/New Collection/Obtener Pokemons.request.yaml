@@ -1,0 +1,5 @@
+$kind: http-request
+name: Obtener Pokemons
+url: http://127.0.0.1:8000/api/pokemons/
+method: GET
+order: 1701277257872373

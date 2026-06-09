@@ -1,0 +1,19 @@
+$kind: http-request
+name: Login
+url: http://127.0.0.1:8000/o/token/
+method: POST
+body:
+  type: urlencoded
+  content:
+    username: alan
+    password: Yahirem098
+    grant_type: password
+    client_id: S8BHbBSXlBbxUrMZo6pLZLl3XQX4Vpo2xTHJuDqC
+    client_secret: EEw9lrfzfdQbMYkKfnsy8wkprbInygZPcqJgs08OMhrDezcsyoFvKklVuUTXDMdlR9nCwfJ1t6tsB6XZ7XbaQVxXkhSfx8tzq9LNaM3cz561T7QyDm6s7RqRGuWY6v5w
+scripts:
+  - type: afterResponse
+    code: "let responseData = pm.response.json();\r
+
+      pm.environment.set(\"token\", responseData.access_token);"
+    language: text/javascript
+order: 1781018462269

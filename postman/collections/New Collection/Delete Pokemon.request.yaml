@@ -1,0 +1,9 @@
+$kind: http-request
+name: Delete Pokemon
+url: http://127.0.0.1:8000/api/pokemons/20/
+method: DELETE
+auth:
+  type: bearer
+  credentials:
+    token: "{{token}}"
+order: 2793411652457555
