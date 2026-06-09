@@ -1,0 +1,8 @@
+$kind: http-request
+name: Obtener Un Trainer
+url: http://127.0.0.1:8000/api/trainers/3/
+method: GET
+body:
+  type: json
+  content: ""
+order: 9000
